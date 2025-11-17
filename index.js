@@ -7,10 +7,7 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-const source = req.body.source || "zh-CN"; // 使用标准语言代码
-const target = req.body.target || "en";
 
-const translation = await lara.translate(text, source, target);
 
 const credentials = new Credentials(
   process.env.LARA_ACCESS_KEY_ID,
