@@ -18,6 +18,7 @@ const lara = new Translator(credentials);
 app.post("/translate", async (req, res) => {
   try {
     const { text, source = "en-US", target = "it-IT" } = req.body;
+     console.log("Incoming request:", { text, source, target }); 
     if (!text) return res.status(400).json({ error: "Missing text" });
 
     const result = await lara.translate(text, source, target);
