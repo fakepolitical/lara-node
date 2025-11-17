@@ -3,7 +3,7 @@ import { Translator } from "@translated/lara";
 
 const lara = new Translator({ apiKey: process.env.LARA_API_KEY });
 
-async function translate(text, source = "zh", target = "en") {
+async function translate(text, source = "zh-CN", target = "en") {
   // Lara SDK 需要明确 source，不能用 "auto"
   return await lara.translate(text, source, target);
 }
