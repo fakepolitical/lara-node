@@ -1,30 +1,40 @@
-// index.js on Render
-import { Translator } from "@translated/lara";
-
-const lara = new Translator({ apiKey: process.env.LARA_API_KEY });
-
-async function translate(text, source = "zh-CN", target = "en") {
-  // Lara SDK 需要明确 source，不能用 "auto"
-  return await lara.translate(text, source, target);
-}
-
-// 使用 express 或类似框架
+// index.js
 import express from "express";
+import { Credentials, Translator } from "@translated/lara";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 const app = express();
+app.use(express.json());
+const source = req.body.source || "zh-CN"; // 使用标准语言代码
+const target = req.body.target || "en";
 
-// 确保 express 解析 JSON 时 UTF-8
-app.use(express.json({ type: "application/json; charset=utf-8" }));
+const translation = await lara.translate(text, source, target);
 
+const credentials = new Credentials(
+  process.env.LARA_ACCESS_KEY_ID,
+  process.env.LARA_ACCESS_KEY_SECRET
+);
+const lara = new Translator(credentials);
+
+// POST /translate
 app.post("/translate", async (req, res) => {
   try {
-    const { text, source, target } = req.body;
-    const translation = await translate(text, source, target);
-    res.json({ translation });
+    const { text, source = "zh-CN", target = "en" } = req.body;
+     console.log("Incoming request:", { text, source, target });
+    if (!text) return res.status(400).json({ error: "Missing text" });
+
+    const result = await lara.translate(text, source, target);
+    res.json({ translation: result.translation });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-const port = process.env.PORT || 10000;
-app.listen(port, () => console.log("Server listening on port", port));
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
+
