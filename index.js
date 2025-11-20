@@ -18,7 +18,7 @@ const lara = new Translator(credentials);
 // POST /translate
 app.post("/translate", async (req, res) => {
   try {
-    const { text, source = "zh-CN", target = "en" } = req.body;
+    const { text, source = "de", target = "en" } = req.body;
      console.log("Incoming request:", { text, source, target });
     if (!text) return res.status(400).json({ error: "Missing text" });
 
